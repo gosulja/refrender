@@ -2,7 +2,53 @@
 #include "color4.h"
 #include <cglm/cglm.h>
 
-Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize, Color4 color) {
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+unsigned int loadTexture(char const * path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+        else
+        {
+            printf("Unexpected number of components (%d) in texture: %s\n", nrComponents, path);
+            stbi_image_free(data);
+            return 0;  
+        }
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        printf("Texture failed to load at path: %s\n", path);
+        return 0;  
+    }
+
+    return textureID;
+}
+
+Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize, Color4 color, const char* texturePath) {
     Object* obj = malloc(sizeof(Object));
     if (obj == NULL) {
         printf("Error: Failed to allocate memory for Object\n");
@@ -56,13 +102,18 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     if (glGetError() != GL_NO_ERROR) {
         printf("Error: Failed to set up vertex attributes\n");
         free(obj);
         return NULL;
     }
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    obj->texture = loadTexture(texturePath);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);

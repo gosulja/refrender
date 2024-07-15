@@ -15,6 +15,7 @@ typedef struct {
     unsigned int VAO;
     unsigned int VBO;
     unsigned int EBO;
+    unsigned int texture;
 } Object;
 
 Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize, Color4 color);

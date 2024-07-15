@@ -38,7 +38,7 @@ int main() {
     initState(&state);
 
     // Create a red cube
-    Object* redCube = createCube(0.5f, (Color4){0.5f, 0.5f, 0.0f, 1.0f});
+    Object* redCube = createCube(0.5f, (Color4){0.5f, 0.5f, 0.0f, 1.0f}, "../textures/wall.jpg");
     if (redCube == NULL) {
         fprintf(stderr, "Failed to create red cube\n");
         return -1;
@@ -46,7 +46,7 @@ int main() {
     addObject(redCube);
 
     // Create a green cube
-    Object* greenCube = createCube(0.5f, (Color4){0.0f, 1.0f, 0.0f, 1.0f});
+    Object* greenCube = createCube(0.5f, (Color4){0.0f, 1.0f, 0.0f, 1.0f}, "../textures/wall.jpg");
     if (greenCube == NULL) {
         fprintf(stderr, "Failed to create green cube\n");
         return -1;

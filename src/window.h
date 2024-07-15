@@ -4,7 +4,7 @@
 #include <glew.h>
 #include <glfw3.h>
 
-#define WIDTH 800
+#define WIDTH 1200
 #define HEIGHT 600
 
 GLFWwindow* initializeGLFWWindow();
