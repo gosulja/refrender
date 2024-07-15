@@ -11,3 +11,4 @@ they also have buffers. Create an object manager, stores objects in an array and
 
 Current features are very barebones and will be improved later on.
 
+![image](https://github.com/user-attachments/assets/e8ce73ea-490c-4ac1-8aba-d24e818e2204)
