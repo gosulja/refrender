@@ -24,11 +24,11 @@ Created a State and Camera structure for 3D rendering, added Color4 values which
 Added Nuklear.h for OpenGL and GLFW. Added textures, which made me see the error in cube vertices, added debug menu, for now it shows camera properties.
 
 #### Todo:
-Fix cube rendering.
-Fix texture wrapping.
-Add compatability for more complex shapes, getting them ready for rendering.
-Add a .fbx object importer.
-Generate a tree of eahc object with their properties in the debug menu.
+* Fix cube rendering.
+* Fix texture wrapping.
+* Add compatability for more complex shapes, getting them ready for rendering.
+* Add a .fbx object importer.
+* Generate a tree of eahc object with their properties in the debug menu.
 
 ![image](https://github.com/user-attachments/assets/6f21d959-b4e4-4132-86d3-760f1f1dfa89)
 
