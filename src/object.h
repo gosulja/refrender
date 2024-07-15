@@ -1,22 +1,25 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "color4.h"
 #include <glew.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cglm/cglm.h>
 
 typedef struct {
-    float position[3];
-    float rotation[3];
-    float scale[3];
-    float color[4];
+    vec3 position;
+    vec3 rotation;
+    vec3 scale;
+    vec4 color;
+    mat4 modelMatrix;
 
     unsigned int VAO;
     unsigned int VBO;
     unsigned int EBO;
 } Object;
 
-Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize);
+Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize, Color4 color);
 void destroyObject(Object* obj);
+
+void updateObjectModelMatrix(Object* obj);
 
 #endif // !OBJECT_H

@@ -1,26 +1,22 @@
 #include "object.h"
+#include "color4.h"
+#include <cglm/cglm.h>
 
-Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize) {
-    printf("Starting createObject function\n");
-
+Object* createObject(float* vertices, int verticesSize, unsigned int* indices, int indicesSize, Color4 color) {
     Object* obj = malloc(sizeof(Object));
     if (obj == NULL) {
         printf("Error: Failed to allocate memory for Object\n");
         return NULL;
     }
-    printf("Object allocated successfully\n");
+    
+    glm_vec3_zero(obj->position);
+    glm_vec3_zero(obj->rotation);
+    glm_vec3_one(obj->scale);
+    
+    glm_vec4_copy((vec4){color.r, color.g, color.b, color.a}, obj->color);
 
-    for (int i = 0; i < 3; i++) {
-        obj->position[i] = 0.0f;
-        obj->rotation[i] = 0.0f;
-        obj->scale[i] = 1.0f;
-    }
-    for (int i = 0; i < 4; i++) {
-        obj->color[i] = 1.0f;
-    }
-    printf("Object properties initialized\n");
+    glm_mat4_identity(obj->modelMatrix);
 
-    printf("Generating VAO\n");
     glGenVertexArrays(1, &obj->VAO);
     if (glGetError() != GL_NO_ERROR) {
         printf("Error: Failed to generate VAO\n");
@@ -28,7 +24,6 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Generating VBO\n");
     glGenBuffers(1, &obj->VBO);
     if (glGetError() != GL_NO_ERROR) {
         printf("Error: Failed to generate VBO\n");
@@ -36,7 +31,6 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Generating EBO\n");
     glGenBuffers(1, &obj->EBO);
     if (glGetError() != GL_NO_ERROR) {
         printf("Error: Failed to generate EBO\n");
@@ -44,10 +38,8 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Binding VAO\n");
     glBindVertexArray(obj->VAO);
 
-    printf("Binding and setting up VBO\n");
     glBindBuffer(GL_ARRAY_BUFFER, obj->VBO);
     glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW);
     if (glGetError() != GL_NO_ERROR) {
@@ -56,7 +48,6 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Binding and setting up EBO\n");
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
     if (glGetError() != GL_NO_ERROR) {
@@ -65,7 +56,6 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Setting up vertex attributes\n");
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     if (glGetError() != GL_NO_ERROR) {
@@ -74,11 +64,9 @@ Object* createObject(float* vertices, int verticesSize, unsigned int* indices, i
         return NULL;
     }
 
-    printf("Unbinding buffers\n");
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    printf("Object created successfully\n");
     return obj;
 }
 
@@ -89,3 +77,20 @@ void destroyObject(Object* obj) {
     free(obj);
 }
 
+void updateObjectModelMatrix(Object* obj) {
+    mat4 translate, rotate, scale, temp;
+
+    glm_mat4_identity(obj->modelMatrix);
+    
+    glm_translate_make(translate, obj->position);
+    
+    glm_mat4_identity(rotate);
+    glm_rotate(rotate, obj->rotation[0], (vec3){1.0f, 0.0f, 0.0f});
+    glm_rotate(rotate, obj->rotation[1], (vec3){0.0f, 1.0f, 0.0f});
+    glm_rotate(rotate, obj->rotation[2], (vec3){0.0f, 0.0f, 1.0f});
+    
+    glm_scale_make(scale, obj->scale);
+    
+    glm_mat4_mul(translate, rotate, temp);
+    glm_mat4_mul(temp, scale, obj->modelMatrix);
+}
