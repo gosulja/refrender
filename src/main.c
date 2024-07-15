@@ -3,6 +3,7 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <cglm/cglm.h>
+
 #include "shader.h"
 #include "window.h"
 #include "object.h"
