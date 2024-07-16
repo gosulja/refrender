@@ -53,6 +53,7 @@ void render(GLFWwindow* window, unsigned int shaderProgram, State* state) {
         processInput(window, state);
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -71,7 +72,7 @@ void render(GLFWwindow* window, unsigned int shaderProgram, State* state) {
         for (int i = 0; i < manager->objectCount; i++) {
             Object* obj = manager->objects[i];
             glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, (float*)obj->modelMatrix);
-            glUniform4fv(glGetUniformLocation(shaderProgram, "objectColor"), 1, obj->color);
+            glUniform4fv(glGetUniformLocation(shaderProgram, "objectColor"), 1, obj->color); 
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, obj->texture);

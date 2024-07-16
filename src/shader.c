@@ -11,7 +11,7 @@ const char* vertexShaderSource = "#version 330 core\n"
     "uniform mat4 projection;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = projection * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
     "   TexCoord = aTexCoord;\n"
     "}\0";
 
