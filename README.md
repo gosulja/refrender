@@ -51,4 +51,21 @@ Added more debug controls; specifically for the objects in the object manager, d
 
 ![image](https://github.com/user-attachments/assets/2c4c52b1-fd10-4f1e-9bd9-954155d69503)
 
+### 07/16/2024 3:38 PM
+
+Fixed the object rendering (Forgot to add GL_DEPTH_TEST)
+
+#### TODO:
+* ~~Fix cube rendering.~~
+* Fix texture wrapping.
+* Add compatability for more complex shapes, getting them ready for rendering.
+* Add a .fbx object importer.
+* ~~Generate a tree of each object with their properties in the debug menu.~~
+
+#### DONE:
+- [x] Generate a tree of each object with their properties in the debug menu.
+- [x] Fix cube rendering.
+
+ ![image](https://github.com/user-attachments/assets/70f48358-595d-44cf-a124-c075817df9f8)
+
 
