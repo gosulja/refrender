@@ -35,3 +35,20 @@ Added Nuklear.h for OpenGL and GLFW. Added textures, which made me see the error
 
 ![image](https://github.com/user-attachments/assets/6f21d959-b4e4-4132-86d3-760f1f1dfa89)
 
+### 07/16/2024 1:19 PM
+
+Added more debug controls; specifically for the objects in the object manager, displaying their properties and attributes, change their position, rotation and scale etc.
+
+#### TODO:
+* Fix cube rendering.
+* Fix texture wrapping.
+* Add compatability for more complex shapes, getting them ready for rendering.
+* Add a .fbx object importer.
+* ~~Generate a tree of each object with their properties in the debug menu.~~
+
+#### DONE:
+- [x] Generate a tree of each object with their properties in the debug menu.
+
+![image](https://github.com/user-attachments/assets/2c4c52b1-fd10-4f1e-9bd9-954155d69503)
+
+
