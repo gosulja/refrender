@@ -31,7 +31,7 @@ Added Nuklear.h for OpenGL and GLFW. Added textures, which made me see the error
 * Generate a tree of eahc object with their properties in the debug menu.
 
 #### Notices:
-* Typo in window title.
+* ~~Typo in window title.~~
 
 ![image](https://github.com/user-attachments/assets/6f21d959-b4e4-4132-86d3-760f1f1dfa89)
 
