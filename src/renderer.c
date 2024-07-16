@@ -83,7 +83,7 @@ void render(GLFWwindow* window, unsigned int shaderProgram, State* state) {
         }
 
         nk_glfw3_new_frame();
-        if (nk_begin(ctx, "refrunder - Debug", nk_rect(50, 50, 300, 400),
+        if (nk_begin(ctx, "rufrender - Debug", nk_rect(0, 0, 300, 600),
             NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
             NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
         {  
@@ -139,7 +139,90 @@ void render(GLFWwindow* window, unsigned int shaderProgram, State* state) {
             nk_slider_float(ctx, -360.0f, &state->camera.yaw, 360.0f, 1.0f);
             nk_label(ctx, "Pitch:", NK_TEXT_LEFT);
             nk_slider_float(ctx, -89.0f, &state->camera.pitch, 89.0f, 1.0f); 
-        }
+            nk_label(ctx, "Cam Speed:", NK_TEXT_LEFT);
+            nk_slider_float(ctx, 0.0f, &state->camSpeed, 50.0f, 1.0f);
+			
+			if (nk_tree_push(ctx, NK_TREE_TAB, "Objects", NK_MINIMIZED))
+			{
+				ObjectManager* manager = getObjectManager();
+				for (int i = 0; i < manager->objectCount; i++)
+				{
+					Object* obj = manager->objects[i];
+					char objName[32];
+					snprintf(objName, sizeof(objName), "Object %d", i);
+					
+					if (nk_tree_push(ctx, NK_TREE_NODE, objName, NK_MINIMIZED))
+					{
+						if (nk_tree_push(ctx, NK_TREE_NODE, "Position", NK_MINIMIZED))
+						{
+							nk_layout_row_dynamic(ctx, 25, 4);
+							nk_label(ctx, "X:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -10.0f, &obj->position[0], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Y:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -10.0f, &obj->position[1], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Z:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -10.0f, &obj->position[2], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_tree_pop(ctx);
+						}
+
+						if (nk_tree_push(ctx, NK_TREE_NODE, "Rotation", NK_MINIMIZED))
+						{
+							nk_layout_row_dynamic(ctx, 25, 4);
+							nk_label(ctx, "X:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -360.0f, &obj->rotation[0], 360.0f, 1.0f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Y:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -360.0f, &obj->rotation[1], 360.0f, 1.0f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Z:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, -360.0f, &obj->rotation[2], 360.0f, 1.0f)) updateObjectModelMatrix(obj);
+							nk_tree_pop(ctx);
+						}
+
+						if (nk_tree_push(ctx, NK_TREE_NODE, "Scale", NK_MINIMIZED))
+						{
+							nk_layout_row_dynamic(ctx, 25, 4);
+							nk_label(ctx, "X:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, 0.1f, &obj->scale[0], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Y:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, 0.1f, &obj->scale[1], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_label(ctx, "Z:", NK_TEXT_LEFT);
+							if (nk_slider_float(ctx, 0.1f, &obj->scale[2], 10.0f, 0.1f)) updateObjectModelMatrix(obj);
+							nk_tree_pop(ctx);
+						}
+
+						if (nk_tree_push(ctx, NK_TREE_NODE, "Color", NK_MINIMIZED))
+						{
+							nk_layout_row_dynamic(ctx, 25, 4);
+							nk_label(ctx, "R:", NK_TEXT_LEFT);
+							nk_slider_float(ctx, 0.0f, &obj->color[0], 1.0f, 0.01f);
+							nk_label(ctx, "G:", NK_TEXT_LEFT);
+							nk_slider_float(ctx, 0.0f, &obj->color[1], 1.0f, 0.01f);
+							nk_label(ctx, "B:", NK_TEXT_LEFT);
+							nk_slider_float(ctx, 0.0f, &obj->color[2], 1.0f, 0.01f);
+							nk_label(ctx, "A:", NK_TEXT_LEFT);
+							nk_slider_float(ctx, 0.0f, &obj->color[3], 1.0f, 0.01f);
+							nk_tree_pop(ctx);
+						}
+
+						if (nk_tree_push(ctx, NK_TREE_NODE, "OpenGL IDs", NK_MINIMIZED))
+						{
+							nk_layout_row_dynamic(ctx, 25, 2);
+							nk_label(ctx, "VAO:", NK_TEXT_LEFT);
+							nk_labelf(ctx, NK_TEXT_RIGHT, "%u", obj->VAO);
+							nk_label(ctx, "VBO:", NK_TEXT_LEFT);
+							nk_labelf(ctx, NK_TEXT_RIGHT, "%u", obj->VBO);
+							nk_label(ctx, "EBO:", NK_TEXT_LEFT);
+							nk_labelf(ctx, NK_TEXT_RIGHT, "%u", obj->EBO);
+							nk_label(ctx, "Texture:", NK_TEXT_LEFT);
+							nk_labelf(ctx, NK_TEXT_RIGHT, "%u", obj->texture);
+							nk_tree_pop(ctx);
+						}
+
+						nk_tree_pop(ctx);
+					}
+				}
+				nk_tree_pop(ctx);
+			}
+		}
         nk_end(ctx);
         
         nk_glfw3_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
